@@ -1,3 +1,0 @@
-Manifest-Version: 1.0
-Main-Class: br.com.front.server2.InicioServer2
-

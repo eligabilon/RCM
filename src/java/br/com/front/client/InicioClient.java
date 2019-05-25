@@ -1,9 +1,12 @@
 package br.com.front.client;
 
-import br.com.backEnd.Servidor;
+import br.com.backEnd.JLayer;
+import br.com.backEnd.Log;
 import br.com.entity.Attributes;
 
 import javax.swing.*;
+import java.applet.Applet;
+import java.applet.AudioClip;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
@@ -11,16 +14,18 @@ import java.io.FileOutputStream;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
+import java.net.MalformedURLException;
 import java.net.SocketException;
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-//teste
+
+@SuppressWarnings("Duplicates")
 public class InicioClient {
 
     static final int CABECALHO = 4;
-    static final int TAMANHO_PACOTE = 324 + CABECALHO;
+    static final int TAMANHO_PACOTE = 320 + CABECALHO;
     static final int PORTA_SERVIDOR = 8002;
     static final int PORTA_ACK = 8003;
 
@@ -33,15 +38,19 @@ public class InicioClient {
     private JButton btnLimpar;
     private JButton btnBaixar;
     private static Attributes attributes = new Attributes();
-    
-    private List<String> msgConsole = new ArrayList<>();
+    public static AudioClip music;
+    private int saiFora = 0;
+
+    JLayer.MP3Musica musica = new JLayer.MP3Musica();
+    Log log = new Log();
+    private static List<String> msgConsole = new ArrayList<>();
 
     public InicioClient() {
         //textfild
         attributes.setDiretorioMusic(textLocalMusica.getText());
         attributes.setNomeMusic(textNomeMusica.getText());
         //textarea
-        msgConsole.add(textAreaResult.getText());
+        log.logCliente(textAreaResult.getText());
         //button
         btnLimpar.addActionListener(new ClearBtnClicked());
         btnBaixar.addActionListener(new BaixarBtnClicked());
@@ -50,7 +59,7 @@ public class InicioClient {
     //construtor
     public InicioClient(int portaEntrada, int portaDestino, String caminho) {
         DatagramSocket socketEntrada, socketSaida;
-        msgConsole.add("Servidor: porta de entrada: " + portaEntrada + ", " + "porta de destino: " + portaDestino + ".");
+        log.logCliente("Servidor: porta de entrada: " + portaEntrada + ", " + "porta de destino: " + portaDestino + ".");
 
         int ultimoNumSeq = -1;
         int proxNumSeq = 0;  //proximo numero de sequencia
@@ -60,8 +69,7 @@ public class InicioClient {
         try {
             socketEntrada = new DatagramSocket(portaEntrada);
             socketSaida = new DatagramSocket();
-            msgConsole.add("Servidor Conectado...");
-            textAreaResult.setText(msgConsole.toString());
+            log.logCliente("Servidor Conectado...");
             try {
                 byte[] recebeDados = new byte[TAMANHO_PACOTE];
                 DatagramPacket recebePacote = new DatagramPacket(recebeDados, recebeDados.length);
@@ -74,7 +82,7 @@ public class InicioClient {
                     InetAddress enderecoIP = recebePacote.getAddress();
 
                     int numSeq = ByteBuffer.wrap(Arrays.copyOfRange(recebeDados, 0, CABECALHO)).getInt();
-                    msgConsole.add("Servidor: Numero de sequencia recebido " + numSeq);
+                    log.logCliente("Servidor: Numero de sequencia recebido " + numSeq);
 
                     //se o pacote for recebido em ordem
                     if (numSeq == proxNumSeq) {
@@ -83,17 +91,17 @@ public class InicioClient {
                             byte[] pacoteAck = gerarPacote(-2);     //ack de encerramento
                             socketSaida.send(new DatagramPacket(pacoteAck, pacoteAck.length, enderecoIP, portaDestino));
                             transferenciaCompleta = true;
-                            msgConsole.add("Servidor: Todos pacotes foram recebidos! Arquivo criado!");
+                            log.logCliente("Servidor: Todos pacotes foram recebidos! Arquivo criado!");
                         } else {
                             proxNumSeq = numSeq + TAMANHO_PACOTE - CABECALHO;  //atualiza proximo numero de sequencia
                             byte[] pacoteAck = gerarPacote(proxNumSeq);
                             socketSaida.send(new DatagramPacket(pacoteAck, pacoteAck.length, enderecoIP, portaDestino));
-                            msgConsole.add("Servidor: Ack enviado " + proxNumSeq);
+                            log.logCliente("Servidor: Ack enviado " + proxNumSeq);
                         }
 
-                        //se for o primeiro pacote da transferencia 
+                        //se for o primeiro pacote da transferencia
                         if (numSeq == 0 && ultimoNumSeq == -1) {
-                            //cria arquivo    
+                            //cria arquivo
                             File arquivo = new File(caminho);
                             if (!arquivo.exists()) {
                                 arquivo.createNewFile();
@@ -104,10 +112,14 @@ public class InicioClient {
                         fos.write(recebeDados, CABECALHO, recebePacote.getLength() - CABECALHO);
 
                         ultimoNumSeq = numSeq; //atualiza o ultimo numero de sequencia enviado
+
+                        //toca a musica se o arquivo existir
+                        tocarMusicaQdoBaixada(caminho);
+
                     } else {    //se pacote estiver fora de ordem, mandar duplicado
                         byte[] pacoteAck = gerarPacote(ultimoNumSeq);
                         socketSaida.send(new DatagramPacket(pacoteAck, pacoteAck.length, enderecoIP, portaDestino));
-                        msgConsole.add("Servidor: Ack duplicado enviado " + ultimoNumSeq);
+                        log.logCliente("Servidor: Ack duplicado enviado " + ultimoNumSeq);
                     }
 
                 }
@@ -120,14 +132,30 @@ public class InicioClient {
             } finally {
                 socketEntrada.close();
                 socketSaida.close();
-                msgConsole.add("Servidor: Socket de entrada fechado!");
-                msgConsole.add("Servidor: Socket de saida fechado!");
+                log.logCliente("Servidor: Socket de entrada fechado!");
+                log.logCliente("Servidor: Socket de saida fechado!");
             }
         } catch (SocketException e1) {
             e1.printStackTrace();
         }
-        textAreaResult.setText(msgConsole.toString()+"\n");
-        System.out.println(msgConsole.toString());
+    }
+
+    private void tocarMusicaQdoBaixada(String caminho) {
+        File file = new File(caminho);
+        if (file.exists() && saiFora == 0) {
+            saiFora = 1;
+            // INSTANCIAÇÃO DO OBJETO FILE COM O ARQUIVO MP3
+            File mp3File = new File(caminho);
+            try {
+                //Thread.sleep(5000);
+                //toca musica
+                musica.tocar(mp3File);
+                // CHAMA O METODO QUE TOCA A MUSICA
+                musica.start();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
     }
     //fim do construtor
 
@@ -138,7 +166,7 @@ public class InicioClient {
         bufferPacote.put(numAckBytes);
         return bufferPacote.array();
     }
-    
+
     //acao do botao limpar
     private class ClearBtnClicked implements ActionListener {
         @Override
@@ -155,10 +183,18 @@ public class InicioClient {
         @Override
         public void actionPerformed(ActionEvent e) {
             if (!verificarCampos()) {
-                msgConsole.add(textLocalMusica.getText() + "\n" + textNomeMusica.getText()
+                textAreaResult.append(textLocalMusica.getText() + "\n" + textNomeMusica.getText()
                         + "\n" + "Sequêncial " + sequencialRadioButton.isSelected() + "\n" + "Aleatório " + aleatorioRadioButton.isSelected());
 
-                InicioClient client = new InicioClient(PORTA_SERVIDOR, PORTA_ACK, textLocalMusica.getText() + textNomeMusica.getText());
+                textAreaResult.append(" \n RECEBENDO MÚSICA...");
+
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        InicioClient client = new InicioClient(PORTA_SERVIDOR, PORTA_ACK, textLocalMusica.getText() + textNomeMusica.getText());
+                        textAreaResult.append("\n MÚSICA RECEBIDA...");
+                    }
+                }).start();
             }
         }
     }
@@ -186,6 +222,15 @@ public class InicioClient {
         }
 
         return ret;
+    }
+
+    public static void tocador() {
+        try {
+            music = Applet.newAudioClip(new File(attributes.getNomeMusic()).toURL());
+            music.play();
+        } catch (MalformedURLException e) {
+            System.out.println("Erro. Verifique o diretorio da Música.");
+        }
     }
 
     public static void main(String[] args) {
@@ -219,4 +264,6 @@ public class InicioClient {
             e.getMessage();
         }
     }
+
 }
+
