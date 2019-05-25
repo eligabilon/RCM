@@ -8,7 +8,7 @@ import java.text.SimpleDateFormat;
 
 public class Log {
     Timestamp nomeLog = new Timestamp(System.currentTimeMillis());
-    String nome = new SimpleDateFormat("dd-MM-yyyy_hh:mm:ss").format(nomeLog.getTime());
+    String nome = new SimpleDateFormat("dd-MM-yyyy_hh-mm-ss").format(nomeLog.getTime());
 
     public void logCliente(String msgLog) {
         BufferedWriter bw = null;
