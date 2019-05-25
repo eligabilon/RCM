@@ -28,6 +28,7 @@ public class InicioClient {
     static final int TAMANHO_PACOTE = 320 + CABECALHO;
     static final int PORTA_SERVIDOR = 8002;
     static final int PORTA_ACK = 8003;
+    long inicio, fim, total;
 
     private JPanel jpanelClientView;
     private JTextField textLocalMusica;
@@ -79,10 +80,13 @@ public class InicioClient {
                 while (!transferenciaCompleta) {
                     int i = 0;
                     socketEntrada.receive(recebePacote);
+                    fim = System.currentTimeMillis();
                     InetAddress enderecoIP = recebePacote.getAddress();
 
+                    total = fim - inicio;
                     int numSeq = ByteBuffer.wrap(Arrays.copyOfRange(recebeDados, 0, CABECALHO)).getInt();
                     log.logCliente("Servidor: Numero de sequencia recebido " + numSeq);
+                    log.logCliente("RTT: " + total);
 
                     //se o pacote for recebido em ordem
                     if (numSeq == proxNumSeq) {
@@ -96,6 +100,7 @@ public class InicioClient {
                             proxNumSeq = numSeq + TAMANHO_PACOTE - CABECALHO;  //atualiza proximo numero de sequencia
                             byte[] pacoteAck = gerarPacote(proxNumSeq);
                             socketSaida.send(new DatagramPacket(pacoteAck, pacoteAck.length, enderecoIP, portaDestino));
+                            inicio = System.currentTimeMillis();
                             log.logCliente("Servidor: Ack enviado " + proxNumSeq);
                         }
 
@@ -184,7 +189,7 @@ public class InicioClient {
         public void actionPerformed(ActionEvent e) {
             if (!verificarCampos()) {
                 textAreaResult.append(textLocalMusica.getText() + "\n" + textNomeMusica.getText()
-                        + "\n" + "Sequêncial " + sequencialRadioButton.isSelected() + "\n" + "Aleatório " + aleatorioRadioButton.isSelected());
+                        + "\n" + "Sequencial " + sequencialRadioButton.isSelected() + "\n" + "Aleatório " + aleatorioRadioButton.isSelected());
 
                 textAreaResult.append(" \n RECEBENDO MÚSICA...");
 
@@ -213,7 +218,7 @@ public class InicioClient {
             ret = true;
         }
         if (!sequencialRadioButton.isSelected() && !aleatorioRadioButton.isSelected()) {
-            msg3 = "3 - Selecione o rádio button como 'Sequêncial' ou 'Aleatório'.";
+            msg3 = "3 - Selecione o rádio button como 'Sequencial' ou 'Aleatório'.";
             ret = true;
         }
 
