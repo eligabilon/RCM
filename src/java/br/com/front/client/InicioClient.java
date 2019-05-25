@@ -111,6 +111,7 @@ public class InicioClient {
                             inicio = 0;
                             fim = 0;
                             inicio = System.currentTimeMillis();
+                            log.logCliente("Inicio Transação: " + inicio);
                         }
 
                         //se for o primeiro pacote da transferencia

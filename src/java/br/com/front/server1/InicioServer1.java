@@ -13,10 +13,11 @@ import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.nio.ByteBuffer;
+import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Random;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.concurrent.Semaphore;
@@ -42,6 +43,7 @@ public class InicioServer1 {
     
     Log log = new Log();
 
+    Timestamp inicio, fim;
     int base;    // numero da janela
     int proxNumSeq;   //proximo numero de sequencia na janela
     String caminho;     //diretorio + nome do arquivo
@@ -177,6 +179,9 @@ public class InicioServer1 {
                             //enviando pacotes
                             socketSaida.send(new DatagramPacket(enviaDados, enviaDados.length, enderecoIP, portaDestino));
                             log.logServidor("Cliente: Numero de sequencia enviado " + proxNumSeq);
+                            inicio = new Timestamp(System.currentTimeMillis());
+                            String date = new SimpleDateFormat("dd/MM/yyyy hh:mm:ss").format(inicio.getTime());
+                            log.logServidor("Inicio Transação: " + date);
 
                             //atualiza numero de sequencia se nao estiver no fim
                             if (!ultimoNumSeq) {
