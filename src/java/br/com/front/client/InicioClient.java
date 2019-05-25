@@ -17,6 +17,8 @@ import java.net.InetAddress;
 import java.net.MalformedURLException;
 import java.net.SocketException;
 import java.nio.ByteBuffer;
+import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -32,6 +34,7 @@ public class InicioClient {
     static final int PORTA_SERVIDOR = 8002;
     static final int PORTA_ACK = 8003;
     long inicio, fim, total;
+    Timestamp tempo;
 
     static boolean CLICK;
 
@@ -52,6 +55,7 @@ public class InicioClient {
     JLayer.MP3Musica musica = new JLayer.MP3Musica();
     Log log = new Log();
     private static List<String> msgConsole = new ArrayList<>();
+    private int ackAleatorio, seqAleatorio;
 
     public InicioClient() {
         //textfild
@@ -92,7 +96,7 @@ public class InicioClient {
 
                     total = fim - inicio;
                     int numSeq = ByteBuffer.wrap(Arrays.copyOfRange(recebeDados, 0, CABECALHO)).getInt();
-                    log.logCliente("Servidor: Numero de sequencia recebido " + (!CLICK? (numSeq>0?gerador.nextInt(numSeq):0) : numSeq));
+                    log.logCliente("Servidor: Numero de sequencia recebido " + (!CLICK? (numSeq>0?ackAleatorio=gerador.nextInt(numSeq):0) : numSeq));
                     log.logCliente("RTT: " + total);
 
                     //se o pacote for recebido em ordem
@@ -103,15 +107,20 @@ public class InicioClient {
                             socketSaida.send(new DatagramPacket(pacoteAck, pacoteAck.length, enderecoIP, portaDestino));
                             transferenciaCompleta = true;
                             log.logCliente("Servidor: Todos pacotes foram recebidos! Arquivo criado!");
+                            tempo = new Timestamp(System.currentTimeMillis());
+                            String date = new SimpleDateFormat("dd/MM/yyyy hh:mm:ss").format(tempo.getTime());
+                            log.logCliente("Fim Transação: " + date);
                         } else {
                             proxNumSeq = numSeq + TAMANHO_PACOTE - CABECALHO;  //atualiza proximo numero de sequencia
                             byte[] pacoteAck = gerarPacote(proxNumSeq);
                             socketSaida.send(new DatagramPacket(pacoteAck, pacoteAck.length, enderecoIP, portaDestino));
-                            log.logCliente("Servidor: Ack enviado " + (!CLICK ? (proxNumSeq>0?gerador.nextInt(proxNumSeq):0) : proxNumSeq));
+                            log.logCliente("Servidor: Ack enviado " + (!CLICK ? (proxNumSeq>0?seqAleatorio=gerador.nextInt(proxNumSeq):0) : proxNumSeq));
                             inicio = 0;
                             fim = 0;
                             inicio = System.currentTimeMillis();
-                            log.logCliente("Inicio Transação: " + inicio);
+                            tempo = new Timestamp(System.currentTimeMillis());
+                            String date = new SimpleDateFormat("dd/MM/yyyy hh:mm:ss").format(tempo.getTime());
+                            log.logCliente("Inicio Transação: " + date);
                         }
 
                         //se for o primeiro pacote da transferencia

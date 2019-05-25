@@ -43,7 +43,7 @@ public class InicioServer1 {
     
     Log log = new Log();
 
-    Timestamp inicio, fim;
+    Timestamp inicio, tempoFinal;
     int base;    // numero da janela
     int proxNumSeq;   //proximo numero de sequencia na janela
     String caminho;     //diretorio + nome do arquivo
@@ -198,6 +198,9 @@ public class InicioServer1 {
                     socketSaida.close();
                     fis.close();
                     log.logServidor("Cliente: Socket de saida fechado!");
+                    tempoFinal = new Timestamp(System.currentTimeMillis());
+                    String date = new SimpleDateFormat("dd/MM/yyyy hh:mm:ss").format(tempoFinal.getTime());
+                    log.logCliente("Fim Transação: " + date);
                 }
             } catch (Exception e) {
                 e.printStackTrace();
