@@ -33,7 +33,7 @@ public class InicioClient {
     static final int TAMANHO_PACOTE = 320 + CABECALHO;
     static final int PORTA_SERVIDOR = 8002;
     static final int PORTA_ACK = 8003;
-    long inicio, fim, total;
+    long inicio = 0, fim = 0, total = 0;
     Timestamp tempo;
 
     static boolean CLICK;
