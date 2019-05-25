@@ -108,6 +108,7 @@ public class InicioClient {
                             byte[] pacoteAck = gerarPacote(proxNumSeq);
                             socketSaida.send(new DatagramPacket(pacoteAck, pacoteAck.length, enderecoIP, portaDestino));
                             log.logCliente("Servidor: Ack enviado " + (!CLICK ? (proxNumSeq>0?gerador.nextInt(proxNumSeq):0) : proxNumSeq));
+                            inicio = 0;
                             inicio = System.currentTimeMillis();
                         }
 
