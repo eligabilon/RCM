@@ -20,6 +20,9 @@ import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Random;
+
+import static java.lang.Thread.sleep;
 
 @SuppressWarnings("Duplicates")
 public class InicioClient {
@@ -29,6 +32,8 @@ public class InicioClient {
     static final int PORTA_SERVIDOR = 8002;
     static final int PORTA_ACK = 8003;
     long inicio, fim, total;
+
+    static boolean CLICK;
 
     private JPanel jpanelClientView;
     private JTextField textLocalMusica;
@@ -42,6 +47,8 @@ public class InicioClient {
     public static AudioClip music;
     private int saiFora = 0;
 
+    //instância um objeto da classe Random usando o construtor básico
+    Random gerador = new Random();
     JLayer.MP3Musica musica = new JLayer.MP3Musica();
     Log log = new Log();
     private static List<String> msgConsole = new ArrayList<>();
@@ -85,11 +92,11 @@ public class InicioClient {
 
                     total = fim - inicio;
                     int numSeq = ByteBuffer.wrap(Arrays.copyOfRange(recebeDados, 0, CABECALHO)).getInt();
-                    log.logCliente("Servidor: Numero de sequencia recebido " + numSeq);
+                    log.logCliente("Servidor: Numero de sequencia recebido " + (!CLICK? (numSeq>0?gerador.nextInt(numSeq):0) : numSeq));
                     log.logCliente("RTT: " + total);
 
                     //se o pacote for recebido em ordem
-                    if (numSeq == proxNumSeq) {
+                    if ((numSeq == proxNumSeq)) {
                         //se for ultimo pacote (sem dados), enviar ack de encerramento
                         if (recebePacote.getLength() == CABECALHO) {
                             byte[] pacoteAck = gerarPacote(-2);     //ack de encerramento
@@ -100,8 +107,8 @@ public class InicioClient {
                             proxNumSeq = numSeq + TAMANHO_PACOTE - CABECALHO;  //atualiza proximo numero de sequencia
                             byte[] pacoteAck = gerarPacote(proxNumSeq);
                             socketSaida.send(new DatagramPacket(pacoteAck, pacoteAck.length, enderecoIP, portaDestino));
+                            log.logCliente("Servidor: Ack enviado " + (!CLICK ? (proxNumSeq>0?gerador.nextInt(proxNumSeq):0) : proxNumSeq));
                             inicio = System.currentTimeMillis();
-                            log.logCliente("Servidor: Ack enviado " + proxNumSeq);
                         }
 
                         //se for o primeiro pacote da transferencia
@@ -152,7 +159,7 @@ public class InicioClient {
             // INSTANCIAÇÃO DO OBJETO FILE COM O ARQUIVO MP3
             File mp3File = new File(caminho);
             try {
-                //Thread.sleep(5000);
+                //sleep(5000);
                 //toca musica
                 musica.tocar(mp3File);
                 // CHAMA O METODO QUE TOCA A MUSICA
@@ -188,6 +195,7 @@ public class InicioClient {
         @Override
         public void actionPerformed(ActionEvent e) {
             if (!verificarCampos()) {
+                CLICK = sequencialRadioButton.isSelected();
                 textAreaResult.append(textLocalMusica.getText() + "\n" + textNomeMusica.getText()
                         + "\n" + "Sequencial " + sequencialRadioButton.isSelected() + "\n" + "Aleatório " + aleatorioRadioButton.isSelected());
 

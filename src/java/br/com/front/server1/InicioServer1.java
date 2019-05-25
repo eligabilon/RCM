@@ -16,6 +16,7 @@ import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Random;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.concurrent.Semaphore;
@@ -29,6 +30,7 @@ public class InicioServer1 {
     static final int PORTA_SERVIDOR = 8002;
     static final int PORTA_ACK = 8003;
 
+    private int cont = 0;
     private JPanel jpanelServer1View;
     private JTextField textIP;
     private JTextField textLocalMusica;
@@ -148,6 +150,7 @@ public class InicioServer1 {
 
                 try {
                     while (!transferenciaCompleta) {    //envia pacotes se a janela nao estiver cheia
+
                         if (proxNumSeq < base + (TAMANHO_JANELA * TAMANHO_PACOTE)) {
                             semaforo.acquire();
                             if (base == proxNumSeq) {   //se for primeiro pacote da janela, inicia temporizador
@@ -169,6 +172,7 @@ public class InicioServer1 {
                                     enviaDados = gerarPacote(proxNumSeq, dataBytes);
                                 }
                                 listaPacotes.add(enviaDados);
+                                log.logServidor("QTD:PACOTE*****************" + listaPacotes.size() + "*****************");
                             }
                             //enviando pacotes
                             socketSaida.send(new DatagramPacket(enviaDados, enviaDados.length, enderecoIP, portaDestino));
