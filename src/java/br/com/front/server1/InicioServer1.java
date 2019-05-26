@@ -177,10 +177,11 @@ public class InicioServer1 {
                                 log.logServidor("QTD:PACOTE*****************" + listaPacotes.size() + "*****************");
                             }
                             //enviando pacotes
+                            sleep(20);
                             socketSaida.send(new DatagramPacket(enviaDados, enviaDados.length, enderecoIP, portaDestino));
 //                            log.logServidor("Cliente: Numero de sequencia enviado " + proxNumSeq);
                             inicio = new Timestamp(System.currentTimeMillis());
-                            String date = new SimpleDateFormat("dd/MM/yyyy hh:mm:ss").format(inicio.getTime());
+                            String date = new SimpleDateFormat("dd/MM/yyyy hh:mm:ss.SSS").format(inicio.getTime());
                             log.logServidor("Inicio Transação: " + date);
 
                             //atualiza numero de sequencia se nao estiver no fim
