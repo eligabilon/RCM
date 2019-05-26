@@ -129,7 +129,6 @@ public class InicioClient {
                             File arquivo = new File(caminho);
                             if (!arquivo.exists()) {
                                 arquivo.createNewFile();
-                                inicio = System.currentTimeMillis();
                             }
                             fos = new FileOutputStream(arquivo);
                         }
