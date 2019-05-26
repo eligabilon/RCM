@@ -3,6 +3,7 @@ package br.com.front.client;
 import br.com.backEnd.JLayer;
 import br.com.backEnd.Log;
 import br.com.entity.Attributes;
+import br.com.front.server1.InicioServer1;
 
 import javax.swing.*;
 import java.applet.Applet;
@@ -46,6 +47,8 @@ public class InicioClient {
     private JTextArea textAreaResult;
     private JButton btnLimpar;
     private JButton btnBaixar;
+    private JCheckBox caminhoPadrao;
+    private JCheckBox nomePadrao;
     private static Attributes attributes = new Attributes();
     public static AudioClip music;
     private int saiFora = 0;
@@ -66,6 +69,12 @@ public class InicioClient {
         //button
         btnLimpar.addActionListener(new ClearBtnClicked());
         btnBaixar.addActionListener(new BaixarBtnClicked());
+
+        //checkbox
+        caminhoPadrao.addActionListener(new InicioClient.CheckboxCaminhoClicked());
+        caminhoPadrao.setToolTipText("Setar caminho default");
+        nomePadrao.addActionListener(new InicioClient.CheckboxNomeClicked());
+        nomePadrao.setToolTipText("Setar nome default");
     }
 
     //construtor
@@ -101,6 +110,7 @@ public class InicioClient {
 
                     //se o pacote for recebido em ordem
                     if ((numSeq == proxNumSeq)) {
+
                         //se for ultimo pacote (sem dados), enviar ack de encerramento
                         if (recebePacote.getLength() == CABECALHO) {
                             byte[] pacoteAck = gerarPacote(-2);     //ack de encerramento
@@ -190,6 +200,29 @@ public class InicioClient {
         ByteBuffer bufferPacote = ByteBuffer.allocate(CABECALHO);
         bufferPacote.put(numAckBytes);
         return bufferPacote.array();
+    }
+
+    private class CheckboxCaminhoClicked implements ActionListener {
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            if(caminhoPadrao.isSelected()){
+                File file = new File("");
+                textLocalMusica.setText(file.getAbsolutePath());
+            }else{
+                textLocalMusica.setText("");
+            }
+        }
+    }
+
+    private class CheckboxNomeClicked implements ActionListener {
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            if(nomePadrao.isSelected()){
+                textNomeMusica.setText("musica.mp3");
+            }else{
+                textNomeMusica.setText("");
+            }
+        }
     }
 
     //acao do botao limpar
