@@ -129,6 +129,7 @@ public class InicioClient {
                             File arquivo = new File(caminho);
                             if (!arquivo.exists()) {
                                 arquivo.createNewFile();
+                                total = 0;
                             }
                             fos = new FileOutputStream(arquivo);
                         }
