@@ -200,7 +200,7 @@ public class InicioServer1 {
                     fis.close();
                     log.logServidor("Servidor: Socket de saida fechado!");
                     tempoFinal = new Timestamp(System.currentTimeMillis());
-                    String date = new SimpleDateFormat("dd/MM/yyyy hh:mm:ss").format(tempoFinal.getTime());
+                    String date = new SimpleDateFormat("dd/MM/yyyy hh:mm:ss.SSS").format(tempoFinal.getTime());
                     log.logCliente("Fim Transação: " + date);
                 }
             } catch (Exception e) {

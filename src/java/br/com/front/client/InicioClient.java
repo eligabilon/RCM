@@ -118,7 +118,7 @@ public class InicioClient {
                             transferenciaCompleta = true;
                             log.logCliente("Servidor: Todos pacotes foram recebidos! Arquivo criado!");
                             tempo = new Timestamp(System.currentTimeMillis());
-                            String date = new SimpleDateFormat("dd/MM/yyyy hh:mm:ss").format(tempo.getTime());
+                            String date = new SimpleDateFormat("dd/MM/yyyy hh:mm:ss.SSS").format(tempo.getTime());
                             log.logCliente("Fim Transação: " + date);
                         } else {
                             proxNumSeq = numSeq + TAMANHO_PACOTE - CABECALHO;  //atualiza proximo numero de sequencia
@@ -129,12 +129,13 @@ public class InicioClient {
                             fim = 0;
                             inicio = System.currentTimeMillis();
                             tempo = new Timestamp(System.currentTimeMillis());
-                            String date = new SimpleDateFormat("dd/MM/yyyy hh:mm:ss").format(tempo.getTime());
+                            String date = new SimpleDateFormat("dd/MM/yyyy hh:mm:ss.SSS").format(tempo.getTime());
                             log.logCliente("Inicio Transação: " + date);
                         }
 
                         //se for o primeiro pacote da transferencia
                         if (numSeq == 0 && ultimoNumSeq == -1) {
+                            sleep(1000);
                             //cria arquivo
                             File arquivo = new File(caminho);
                             if (!arquivo.exists()) {
@@ -148,7 +149,12 @@ public class InicioClient {
                         ultimoNumSeq = numSeq; //atualiza o ultimo numero de sequencia enviado
 
                         //toca a musica se o arquivo existir
-                        tocarMusicaQdoBaixada(caminho);
+                        if(CLICK){
+                            sleep(4000);
+                            tocarMusicaQdoBaixada(caminho);
+                        } else{
+                            tocarMusicaQdoBaixada(caminho);
+                        }
 
                     } else {    //se pacote estiver fora de ordem, mandar duplicado
                         byte[] pacoteAck = gerarPacote(ultimoNumSeq);
