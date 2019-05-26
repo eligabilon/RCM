@@ -24,6 +24,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
+import java.util.concurrent.TimeUnit;
 
 import static java.lang.Thread.sleep;
 
@@ -36,6 +37,9 @@ public class InicioClient {
     static final int PORTA_ACK = 8003;
     long inicio = 0, fim = 0, total = 0;
     Timestamp tempo;
+    long t_bandwidth_ini, t_bandwidth_fim, t_bandwidth;
+    long file_bandwidth;
+    long tam_arq = 0;
 
     static boolean CLICK;
 
@@ -92,6 +96,8 @@ public class InicioClient {
             socketSaida = new DatagramSocket();
             log.logCliente("Servidor Conectado...");
             try {
+                t_bandwidth_ini = System.currentTimeMillis();
+
                 byte[] recebeDados = new byte[TAMANHO_PACOTE];
                 DatagramPacket recebePacote = new DatagramPacket(recebeDados, recebeDados.length);
 
@@ -162,9 +168,18 @@ public class InicioClient {
                         log.logCliente("Servidor: Ack duplicado enviado " + ultimoNumSeq);
                     }
 
+                    t_bandwidth_fim = System.currentTimeMillis(); // pega tempo final da transmissao
                 }
                 if (fos != null) {
                     fos.close();
+
+                    File arquivo = new File(caminho);
+                    tam_arq = arquivo.length(); // pega o tamanho do arquivo
+
+                    t_bandwidth = (t_bandwidth_fim - t_bandwidth_ini) / 1000; // calcula tempo de transmissao
+                    file_bandwidth = (tam_arq / t_bandwidth); // calcula vazao
+
+                    log.logCliente("Vazao: "  + file_bandwidth + " bytes por segundo\n");
                 }
             } catch (Exception e) {
                 e.printStackTrace();
