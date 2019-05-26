@@ -292,7 +292,10 @@ public class InicioClient {
     }
 
     public static void main(String[] args) {
+        int x;
         layoutNimbus();
+        x = 2;
+        Math.exp(x);
         JFrame frame = new JFrame("InicioClient");
         frame.setTitle("Tela do CLIENTE");
         ImageIcon imagemTituloJanela = new ImageIcon("br/com/front/cliente.png");
