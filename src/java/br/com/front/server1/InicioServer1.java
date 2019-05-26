@@ -77,7 +77,7 @@ public class InicioServer1 {
         transferenciaCompleta = false;
         DatagramSocket socketSaida, socketEntrada;
         semaforo = new Semaphore(1);
-        log.logServidor("Cliente: porta de destino: " + portaDestino + ", porta de entrada: " + portaEntrada + ", caminho: " + caminho);
+        log.logServidor("Servidor: porta de destino: " + portaDestino + ", porta de entrada: " + portaEntrada + ", caminho: " + caminho);
 
         try {
             //criando sockets
@@ -102,7 +102,7 @@ public class InicioServer1 {
         public void run() {
             try {
                 semaforo.acquire();
-                log.logServidor("Cliente: Tempo expirado!");
+                log.logServidor("Servidor: Tempo expirado!");
                 proxNumSeq = base;  //reseta numero de sequencia
                 semaforo.release();
             } catch (InterruptedException e) {
@@ -178,7 +178,7 @@ public class InicioServer1 {
                             }
                             //enviando pacotes
                             socketSaida.send(new DatagramPacket(enviaDados, enviaDados.length, enderecoIP, portaDestino));
-                            log.logServidor("Cliente: Numero de sequencia enviado " + proxNumSeq);
+//                            log.logServidor("Cliente: Numero de sequencia enviado " + proxNumSeq);
                             inicio = new Timestamp(System.currentTimeMillis());
                             String date = new SimpleDateFormat("dd/MM/yyyy hh:mm:ss").format(inicio.getTime());
                             log.logServidor("Inicio Transação: " + date);
@@ -197,7 +197,7 @@ public class InicioServer1 {
                     manipularTemporizador(false);
                     socketSaida.close();
                     fis.close();
-                    log.logServidor("Cliente: Socket de saida fechado!");
+                    log.logServidor("Servidor: Socket de saida fechado!");
                     tempoFinal = new Timestamp(System.currentTimeMillis());
                     String date = new SimpleDateFormat("dd/MM/yyyy hh:mm:ss").format(tempoFinal.getTime());
                     log.logCliente("Fim Transação: " + date);
