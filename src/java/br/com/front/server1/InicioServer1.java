@@ -152,7 +152,6 @@ public class InicioServer1 {
 
                 try {
                     while (!transferenciaCompleta) {    //envia pacotes se a janela nao estiver cheia
-
                         if (proxNumSeq < base + (TAMANHO_JANELA * TAMANHO_PACOTE)) {
                             semaforo.acquire();
                             if (base == proxNumSeq) {   //se for primeiro pacote da janela, inicia temporizador
@@ -177,8 +176,8 @@ public class InicioServer1 {
                                 log.logServidor("QTD:PACOTE*****************" + listaPacotes.size() + "*****************");
                             }
                             //enviando pacotes
-                            sleep(20);
                             socketSaida.send(new DatagramPacket(enviaDados, enviaDados.length, enderecoIP, portaDestino));
+                            sleep(20);
 //                            log.logServidor("Cliente: Numero de sequencia enviado " + proxNumSeq);
                             inicio = new Timestamp(System.currentTimeMillis());
                             String date = new SimpleDateFormat("dd/MM/yyyy hh:mm:ss.SSS").format(inicio.getTime());
@@ -190,7 +189,6 @@ public class InicioServer1 {
                             }
                             semaforo.release();
                         }
-                        //sleep(5);
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
