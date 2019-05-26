@@ -97,7 +97,7 @@ public class InicioClient {
                     total = fim - inicio;
                     int numSeq = ByteBuffer.wrap(Arrays.copyOfRange(recebeDados, 0, CABECALHO)).getInt();
                     log.logCliente("Servidor: Numero de sequencia recebido " + (!CLICK? (numSeq>0?ackAleatorio=gerador.nextInt(numSeq):0) : numSeq));
-                    log.logCliente("RTT: " + total);
+                    log.logCliente("RTT: " + (total<1?total=0:total));
 
                     //se o pacote for recebido em ordem
                     if ((numSeq == proxNumSeq)) {
