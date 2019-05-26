@@ -190,7 +190,7 @@ public class InicioServer1 {
                             }
                             semaforo.release();
                         }
-                        sleep(5);
+                        //sleep(5);
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
