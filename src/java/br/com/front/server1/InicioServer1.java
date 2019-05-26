@@ -177,6 +177,7 @@ public class InicioServer1 {
                                 log.logServidor("QTD:PACOTE*****************" + listaPacotes.size() + "*****************");
                             }
                             //enviando pacotes
+                            sleep(20);
                             socketSaida.send(new DatagramPacket(enviaDados, enviaDados.length, enderecoIP, portaDestino));
 //                            log.logServidor("Cliente: Numero de sequencia enviado " + proxNumSeq);
                             inicio = new Timestamp(System.currentTimeMillis());
