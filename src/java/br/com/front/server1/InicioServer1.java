@@ -40,7 +40,6 @@ public class InicioServer1 {
     private JButton btnLimpar;
     private JButton btnBaixar;
     private JCheckBox localhostCheckBox;
-    private JTextField campoF;
     private JTextField campoRTT;
     private JTextField campoE;
     private Attributes attributes = new Attributes();
