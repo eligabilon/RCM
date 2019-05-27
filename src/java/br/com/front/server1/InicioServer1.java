@@ -157,7 +157,6 @@ public class InicioServer1 {
         public void run() {
             try {
                 FileInputStream fis = new FileInputStream(new File(caminho));
-
                 try {
                     while (!transferenciaCompleta) {    //envia pacotes se a janela nao estiver cheia
                         if (proxNumSeq < base + (TAMANHO_JANELA * TAMANHO_PACOTE)) {

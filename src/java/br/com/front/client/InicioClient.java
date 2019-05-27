@@ -47,6 +47,7 @@ public class InicioClient {
     static long tempoCalculado;
 
     static boolean CLICK;
+    static boolean descartaPacote;
 
     private JPanel jpanelClientView;
     private JTextField textLocalMusica;
@@ -127,8 +128,15 @@ public class InicioClient {
                     int numSeq = ByteBuffer.wrap(Arrays.copyOfRange(recebeDados, 0, CABECALHO)).getInt();
                     log.logCliente("Servidor: Numero de sequencia recebido " + (!CLICK? (numSeq>0?ackAleatorio=gerador.nextInt(numSeq):0) : numSeq));
 
+                    if (tempoCalculado <= CamadaSimulacao.listaTempo.get(0)) {
+                        descartaPacote = false;
+                    }else{
+                        descartaPacote = true;
+                    }
+
+
                     //se o pacote for recebido em ordem
-                    if ((numSeq == proxNumSeq)) {
+                    if ((numSeq == proxNumSeq) && (descartaPacote == false)) {
                         //se for ultimo pacote (sem dados), enviar ack de encerramento
                         if (recebePacote.getLength() == CABECALHO) {
                             byte[] pacoteAck = gerarPacote(-2);     //ack de encerramento
