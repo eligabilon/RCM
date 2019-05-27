@@ -154,6 +154,8 @@ public class InicioClient {
 
                         ultimoNumSeq = numSeq; //atualiza o ultimo numero de sequencia enviado
 
+                        t_bandwidth_fim = System.currentTimeMillis(); // pega tempo final da transmissao
+
                         //toca a musica se o arquivo existir
                         if(CLICK){
                             sleep(4000);
@@ -167,8 +169,6 @@ public class InicioClient {
                         socketSaida.send(new DatagramPacket(pacoteAck, pacoteAck.length, enderecoIP, portaDestino));
                         log.logCliente("Servidor: Ack duplicado enviado " + ultimoNumSeq);
                     }
-
-                    t_bandwidth_fim = System.currentTimeMillis(); // pega tempo final da transmissao
                 }
                 if (fos != null) {
                     fos.close();
@@ -346,6 +346,5 @@ public class InicioClient {
             e.getMessage();
         }
     }
-
 }
 
