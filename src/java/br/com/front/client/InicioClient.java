@@ -45,6 +45,8 @@ public class InicioClient {
     static Timestamp tempoAtual;
     static Timestamp tempoAnterior;
     static long tempoCalculado;
+    long RTT;
+    long x;
 
     static boolean CLICK;
     static boolean descartaPacote;
@@ -125,6 +127,8 @@ public class InicioClient {
                     tempoCalculado = Long.valueOf(tempoAtual.getTime()) - Long.valueOf(tempoAnterior.getTime());
                     InetAddress enderecoIP = recebePacote.getAddress();
 
+                    CamadaSimulacao.CalculaTempo(tempoCalculado, RTT, x);
+
                     int numSeq = ByteBuffer.wrap(Arrays.copyOfRange(recebeDados, 0, CABECALHO)).getInt();
                     log.logCliente("Servidor: Numero de sequencia recebido " + (!CLICK? (numSeq>0?ackAleatorio=gerador.nextInt(numSeq):0) : numSeq));
 
@@ -133,8 +137,6 @@ public class InicioClient {
                     }else{
                         descartaPacote = true;
                     }
-
-
                     //se o pacote for recebido em ordem
                     if ((numSeq == proxNumSeq) && (descartaPacote == false)) {
                         //se for ultimo pacote (sem dados), enviar ack de encerramento
@@ -220,6 +222,7 @@ public class InicioClient {
                 musica.start();
             } catch (Exception e) {
                 e.printStackTrace();
+                log.logCliente("Música interrompida!");
             }
         }
     }
@@ -283,7 +286,8 @@ public class InicioClient {
                     public void run() {
                         InicioClient client = new InicioClient(PORTA_SERVIDOR, PORTA_ACK, textLocalMusica.getText() + textNomeMusica.getText());
                         textAreaResult.append("\n MÚSICA RECEBIDA...");
-                        CamadaSimulacao.CalculaTempo(Long.valueOf(campoF.getText()), Long.valueOf(campoRTT.getText()), Long.valueOf(campoE.getText()));
+                        RTT = Long.valueOf(campoRTT.getText());
+                        x = Long.valueOf(campoE.getText());
                     }
                 }).start();
             }
