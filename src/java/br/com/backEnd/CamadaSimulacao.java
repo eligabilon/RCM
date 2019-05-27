@@ -6,12 +6,9 @@ import java.util.Collections;
 
 public class CamadaSimulacao{
     static Random gerador = new Random();
-    static long RTT;
-    static long x;
     static long tn;
-    static long t;
     public static List <Long> listaTempo = new ArrayList<Long>();
-    public static void CalculaTempo(long t){
+    public static void CalculaTempo(long t, long RTT, long x){
         RTT = 5;
         x = gerador.nextInt(100);
         Math.exp(x);
