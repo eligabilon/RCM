@@ -114,7 +114,7 @@ public class InicioClient {
                 DatagramPacket recebePacote = new DatagramPacket(recebeDados, recebeDados.length);
 
                 FileOutputStream fos = null;
-
+                tempoAtual = new Timestamp(System.currentTimeMillis());
                 while (!transferenciaCompleta) {
                     int i = 0;
                     socketEntrada.receive(recebePacote);
@@ -129,7 +129,6 @@ public class InicioClient {
 
                     //se o pacote for recebido em ordem
                     if ((numSeq == proxNumSeq)) {
-
                         //se for ultimo pacote (sem dados), enviar ack de encerramento
                         if (recebePacote.getLength() == CABECALHO) {
                             byte[] pacoteAck = gerarPacote(-2);     //ack de encerramento
