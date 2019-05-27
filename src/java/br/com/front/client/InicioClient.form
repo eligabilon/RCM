@@ -163,6 +163,20 @@
           <text value=""/>
         </properties>
       </component>
+      <component id="f9c4c" class="javax.swing.JTextArea" binding="textAreaResult">
+        <constraints>
+          <grid row="4" column="0" row-span="1" col-span="10" vsize-policy="6" hsize-policy="6" anchor="0" fill="3" indent="1" use-parent-layout="false">
+            <preferred-size width="150" height="200"/>
+          </grid>
+        </constraints>
+        <properties>
+          <editable value="false"/>
+          <enabled value="false"/>
+        </properties>
+        <clientProperties>
+          <html.disable class="java.lang.Boolean" value="true"/>
+        </clientProperties>
+      </component>
     </children>
   </grid>
   <buttonGroups>

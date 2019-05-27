@@ -42,6 +42,9 @@ public class InicioClient {
     long t_bandwidth_ini, t_bandwidth_fim, t_bandwidth;
     long file_bandwidth;
     long tam_arq = 0;
+    static Timestamp tempoAtual;
+    static Timestamp tempoAnterior;
+    static long tempoCalculado;
 
     static boolean CLICK;
 
@@ -115,13 +118,14 @@ public class InicioClient {
                 while (!transferenciaCompleta) {
                     int i = 0;
                     socketEntrada.receive(recebePacote);
-                    fim = System.currentTimeMillis();
+                    tempoAnterior = tempoAtual;
+                    tempoAtual = new Timestamp(System.currentTimeMillis());
+
+                    tempoCalculado = Long.valueOf(tempoAtual.getTime()) - Long.valueOf(tempoAnterior.getTime());
                     InetAddress enderecoIP = recebePacote.getAddress();
 
-                    total = fim - inicio;
                     int numSeq = ByteBuffer.wrap(Arrays.copyOfRange(recebeDados, 0, CABECALHO)).getInt();
                     log.logCliente("Servidor: Numero de sequencia recebido " + (!CLICK? (numSeq>0?ackAleatorio=gerador.nextInt(numSeq):0) : numSeq));
-                    log.logCliente("RTT: " + (total<1?total=0:total));
 
                     //se o pacote for recebido em ordem
                     if ((numSeq == proxNumSeq)) {
@@ -140,9 +144,6 @@ public class InicioClient {
                             byte[] pacoteAck = gerarPacote(proxNumSeq);
                             socketSaida.send(new DatagramPacket(pacoteAck, pacoteAck.length, enderecoIP, portaDestino));
                             log.logCliente("Servidor: Ack enviado " + (!CLICK ? (proxNumSeq>0?seqAleatorio=gerador.nextInt(proxNumSeq):0) : proxNumSeq));
-                            inicio = 0;
-                            fim = 0;
-                            inicio = System.currentTimeMillis();
                             tempo = new Timestamp(System.currentTimeMillis());
                             String date = new SimpleDateFormat("dd/MM/yyyy hh:mm:ss.SSS").format(tempo.getTime());
                             log.logCliente("Inicio Transação: " + date);
