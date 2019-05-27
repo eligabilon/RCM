@@ -184,6 +184,9 @@ public class InicioClient {
                         byte[] pacoteAck = gerarPacote(ultimoNumSeq);
                         socketSaida.send(new DatagramPacket(pacoteAck, pacoteAck.length, enderecoIP, portaDestino));
                         log.logCliente("Servidor: Ack duplicado enviado " + ultimoNumSeq);
+                        if (descartaPacote == true){
+                            log.logCliente("Pacote descartado!!! ");
+                        }
                     }
                 }
                 if (fos != null) {
