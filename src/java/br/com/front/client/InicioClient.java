@@ -166,13 +166,7 @@ public class InicioClient {
                         t_bandwidth_fim = System.currentTimeMillis(); // pega tempo final da transmissao
 
                         //toca a musica se o arquivo existir
-                        if(CLICK){
-                            sleep(4000);
-                            tocarMusicaQdoBaixada(caminho);
-                        } else{
-                            tocarMusicaQdoBaixada(caminho);
-                        }
-
+                        tocarMusicaQdoBaixada(caminho);
                     } else {    //se pacote estiver fora de ordem, mandar duplicado
                         byte[] pacoteAck = gerarPacote(ultimoNumSeq);
                         socketSaida.send(new DatagramPacket(pacoteAck, pacoteAck.length, enderecoIP, portaDestino));

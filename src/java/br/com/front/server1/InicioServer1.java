@@ -180,7 +180,7 @@ public class InicioServer1 {
                             }
                             //enviando pacotes
                             socketSaida.send(new DatagramPacket(enviaDados, enviaDados.length, enderecoIP, portaDestino));
-                            sleep(20);
+                            //sleep(20);
 //                            log.logServidor("Cliente: Numero de sequencia enviado " + proxNumSeq);
                             inicio = new Timestamp(System.currentTimeMillis());
                             String date = new SimpleDateFormat("dd/MM/yyyy hh:mm:ss.SSS").format(inicio.getTime());
@@ -192,6 +192,7 @@ public class InicioServer1 {
                             }
                             semaforo.release();
                         }
+                        sleep(20);
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
