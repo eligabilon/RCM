@@ -84,6 +84,7 @@ public class InicioServer1 {
         DatagramSocket socketSaida, socketEntrada;
         semaforo = new Semaphore(1);
         log.logServidor("Servidor: porta de destino: " + portaDestino + ", porta de entrada: " + portaEntrada + ", caminho: " + caminho);
+        textAreaResult.append("Servidor: porta de destino: " + portaDestino + ", porta de entrada: " + portaEntrada + ", caminho: " + caminho);
 
         try {
             //criando sockets
@@ -109,6 +110,7 @@ public class InicioServer1 {
             try {
                 semaforo.acquire();
                 log.logServidor("Servidor: Tempo expirado!");
+                textAreaResult.append("Servidor: Tempo expirado!");
                 proxNumSeq = base;  //reseta numero de sequencia
                 semaforo.release();
             } catch (InterruptedException e) {
@@ -180,6 +182,7 @@ public class InicioServer1 {
                                 }
                                 listaPacotes.add(enviaDados);
                                 log.logServidor("QTD:PACOTE*****************" + listaPacotes.size() + "*****************");
+                                textAreaResult.append("QTD:PACOTE*****************" + listaPacotes.size() + "*****************");
                             }
                             //enviando pacotes
                             socketSaida.send(new DatagramPacket(enviaDados, enviaDados.length, enderecoIP, portaDestino));
@@ -188,6 +191,7 @@ public class InicioServer1 {
                             inicio = new Timestamp(System.currentTimeMillis());
                             String date = new SimpleDateFormat("dd/MM/yyyy hh:mm:ss.SSS").format(inicio.getTime());
                             log.logServidor("Inicio Transação: " + date);
+                            textAreaResult.append("Inicio Transação: " + date);
 
                             //atualiza numero de sequencia se nao estiver no fim
                             if (!ultimoNumSeq) {
@@ -204,9 +208,11 @@ public class InicioServer1 {
                     socketSaida.close();
                     fis.close();
                     log.logServidor("Servidor: Socket de saida fechado!");
+                    textAreaResult.append("Servidor: Socket de saida fechado!");
                     tempoFinal = new Timestamp(System.currentTimeMillis());
                     String date = new SimpleDateFormat("dd/MM/yyyy hh:mm:ss.SSS").format(tempoFinal.getTime());
-                    log.logCliente("Fim Transação: " + date);
+                    log.logServidor("Fim Transação: " + date);
+                    textAreaResult.append("Fim Transação: " + date);
                 }
             } catch (Exception e) {
                 e.printStackTrace();
@@ -239,6 +245,7 @@ public class InicioServer1 {
                         socketEntrada.receive(recebePacote);
                         int numAck = getnumAck(recebeDados);
                         log.logServidor("Cliente: Ack recebido " + numAck);
+                        textAreaResult.append("Cliente: Ack recebido " + numAck);
                         //se for ACK duplicado
                         if (base == numAck + TAMANHO_PACOTE) {
                             semaforo.acquire();
@@ -264,6 +271,7 @@ public class InicioServer1 {
                 } finally {
                     socketEntrada.close();
                     log.logServidor("Cliente: Socket de entrada fechado!");
+                    textAreaResult.append("Cliente: Socket de entrada fechado!");
                 }
             } catch (Exception e) {
                 e.printStackTrace();
@@ -315,7 +323,9 @@ public class InicioServer1 {
         public void actionPerformed(ActionEvent e) {
             if (!verificarCampos()) {
                 log.logServidor(textIP.getText() + "\n" + attributes.getDiretorioMusic()+"\\"+textLocalMusica.getText());
-                log.logServidor("AGUARDE...");
+                textAreaResult.append(textIP.getText() + "\n" + attributes.getDiretorioMusic()+"\\"+textLocalMusica.getText());
+                log.logServidor("\nAGUARDE...\n");
+                textAreaResult.append("\nAGUARDE...\n");
                 InicioServer1 server = new InicioServer1(PORTA_SERVIDOR, PORTA_ACK, attributes.getDiretorioMusic()+"\\"+textLocalMusica.getText(), textIP.getText());
                 imprimeStatus(textAreaResult.getText());
                 CamadaSimulacao.CalculaTempo(Long.valueOf(campoE.getText()), Long.valueOf(campoRTT.getText()), Long.valueOf(campoE.getText()));
