@@ -2,13 +2,16 @@ package br.com.front.server1;
 
 import br.com.backEnd.CamadaSimulacao;
 import br.com.backEnd.Log;
+import br.com.backEnd.TextAreaOutputStream;
 import br.com.entity.Attributes;
 
 import javax.swing.*;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.PrintStream;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
@@ -43,7 +46,7 @@ public class InicioServer1 {
     private JTextField campoRTT;
     private JTextField campoE;
     private Attributes attributes = new Attributes();
-    
+
     Log log = new Log();
 
     Timestamp inicio, tempoFinal;
@@ -280,6 +283,23 @@ public class InicioServer1 {
         }
     }
 
+    private void imprimeStatus(String texto) {
+        // Create an instance of javax.swing.JTextArea control
+        JTextArea txtConsole = new JTextArea();
+
+        // Now create a new TextAreaOutputStream to write to our JTextArea control and wrap a
+        // PrintStream around it to support the println/printf methods.
+        PrintStream out = new PrintStream(new TextAreaOutputStream(txtConsole));
+
+        // redirect standard output stream to the TextAreaOutputStream
+        System.setOut(out);
+
+        // redirect standard error stream to the TextAreaOutputStream
+        System.setErr(out);
+        System.out.println(texto);
+        EventQueue.invokeLater(() -> textAreaResult.setCaretPosition(textAreaResult.getText().length() - 1));
+    }
+
     //acao do botao limpar
     private class ClearBtnClicked implements ActionListener {
         @Override
@@ -297,6 +317,7 @@ public class InicioServer1 {
                 log.logServidor(textIP.getText() + "\n" + attributes.getDiretorioMusic()+"\\"+textLocalMusica.getText());
                 log.logServidor("AGUARDE...");
                 InicioServer1 server = new InicioServer1(PORTA_SERVIDOR, PORTA_ACK, attributes.getDiretorioMusic()+"\\"+textLocalMusica.getText(), textIP.getText());
+                imprimeStatus(textAreaResult.getText());
                 CamadaSimulacao.CalculaTempo(Long.valueOf(campoE.getText()), Long.valueOf(campoRTT.getText()), Long.valueOf(campoE.getText()));
             }
         }
