@@ -1,5 +1,6 @@
 package br.com.front.server1;
 
+import br.com.backEnd.CamadaSimulacao;
 import br.com.backEnd.Log;
 import br.com.entity.Attributes;
 
@@ -39,6 +40,8 @@ public class InicioServer1 {
     private JButton btnLimpar;
     private JButton btnBaixar;
     private JCheckBox localhostCheckBox;
+    private JTextField campoRTT;
+    private JTextField campoE;
     private Attributes attributes = new Attributes();
     
     Log log = new Log();
@@ -177,7 +180,7 @@ public class InicioServer1 {
                             }
                             //enviando pacotes
                             socketSaida.send(new DatagramPacket(enviaDados, enviaDados.length, enderecoIP, portaDestino));
-                            sleep(20);
+                            //sleep(20);
 //                            log.logServidor("Cliente: Numero de sequencia enviado " + proxNumSeq);
                             inicio = new Timestamp(System.currentTimeMillis());
                             String date = new SimpleDateFormat("dd/MM/yyyy hh:mm:ss.SSS").format(inicio.getTime());
@@ -189,6 +192,7 @@ public class InicioServer1 {
                             }
                             semaforo.release();
                         }
+                        sleep(20);
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -293,6 +297,7 @@ public class InicioServer1 {
                 log.logServidor(textIP.getText() + "\n" + attributes.getDiretorioMusic()+"\\"+textLocalMusica.getText());
                 log.logServidor("AGUARDE...");
                 InicioServer1 server = new InicioServer1(PORTA_SERVIDOR, PORTA_ACK, attributes.getDiretorioMusic()+"\\"+textLocalMusica.getText(), textIP.getText());
+                CamadaSimulacao.CalculaTempo(Long.valueOf(campoE.getText()), Long.valueOf(campoRTT.getText()), Long.valueOf(campoE.getText()));
             }
         }
     }
