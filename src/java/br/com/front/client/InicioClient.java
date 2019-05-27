@@ -1,9 +1,11 @@
 package br.com.front.client;
 
+import br.com.backEnd.CamadaSimulacao;
 import br.com.backEnd.JLayer;
 import br.com.backEnd.Log;
 import br.com.entity.Attributes;
 import br.com.front.server1.InicioServer1;
+import sun.awt.SunHints;
 
 import javax.swing.*;
 import java.applet.Applet;
@@ -53,6 +55,9 @@ public class InicioClient {
     private JButton btnBaixar;
     private JCheckBox caminhoPadrao;
     private JCheckBox nomePadrao;
+    private JTextField campoF;
+    private JTextField campoE;
+    private JTextField campoRTT;
     private static Attributes attributes = new Attributes();
     public static AudioClip music;
     private int saiFora = 0;
@@ -79,6 +84,10 @@ public class InicioClient {
         caminhoPadrao.setToolTipText("Setar caminho default");
         nomePadrao.addActionListener(new InicioClient.CheckboxNomeClicked());
         nomePadrao.setToolTipText("Setar nome default");
+
+        campoE.setText("1");
+        campoRTT.setText("10");
+        campoF.setText("1");
     }
 
     //construtor
@@ -272,6 +281,7 @@ public class InicioClient {
                     public void run() {
                         InicioClient client = new InicioClient(PORTA_SERVIDOR, PORTA_ACK, textLocalMusica.getText() + textNomeMusica.getText());
                         textAreaResult.append("\n MÚSICA RECEBIDA...");
+                        CamadaSimulacao.CalculaTempo(Long.valueOf(campoF.getText()), Long.valueOf(campoRTT.getText()), Long.valueOf(campoE.getText()));
                     }
                 }).start();
             }

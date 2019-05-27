@@ -97,7 +97,9 @@
       </component>
       <component id="d819f" class="javax.swing.JLabel">
         <constraints>
-          <grid row="2" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="4" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+          <grid row="2" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="4" anchor="8" fill="0" indent="0" use-parent-layout="false">
+            <preferred-size width="21" height="16"/>
+          </grid>
         </constraints>
         <properties>
           <text value="RTT:"/>
@@ -113,34 +115,35 @@
       </component>
       <component id="90d1" class="javax.swing.JTextField" binding="campoF">
         <constraints>
-          <grid row="2" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
-            <preferred-size width="150" height="-1"/>
+          <grid row="2" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="1" use-parent-layout="false">
+            <preferred-size width="154" height="30"/>
           </grid>
         </constraints>
         <properties>
-          <text value=""/>
-          <toolTipText value="1"/>
+          <text value="1"/>
+          <toolTipText value=""/>
         </properties>
       </component>
       <component id="cfeed" class="javax.swing.JTextField" binding="campoRTT">
         <constraints>
-          <grid row="2" column="3" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
-            <preferred-size width="150" height="-1"/>
+          <grid row="2" column="3" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="1" use-parent-layout="false">
+            <preferred-size width="121" height="30"/>
           </grid>
         </constraints>
         <properties>
-          <toolTipText value="10"/>
+          <text value="10"/>
+          <toolTipText value=""/>
         </properties>
       </component>
       <component id="b2a62" class="javax.swing.JTextField" binding="campoE">
         <constraints>
-          <grid row="2" column="5" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
+          <grid row="2" column="5" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="2" use-parent-layout="false">
             <preferred-size width="150" height="-1"/>
           </grid>
         </constraints>
         <properties>
-          <text value=""/>
-          <toolTipText value="1"/>
+          <text value="1"/>
+          <toolTipText value=""/>
         </properties>
       </component>
     </children>

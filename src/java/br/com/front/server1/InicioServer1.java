@@ -297,7 +297,7 @@ public class InicioServer1 {
                 log.logServidor(textIP.getText() + "\n" + attributes.getDiretorioMusic()+"\\"+textLocalMusica.getText());
                 log.logServidor("AGUARDE...");
                 InicioServer1 server = new InicioServer1(PORTA_SERVIDOR, PORTA_ACK, attributes.getDiretorioMusic()+"\\"+textLocalMusica.getText(), textIP.getText());
-                CamadaSimulacao simulacao = new CamadaSimulacao(campoF.getText(), campoRTT.getText(), campoE.getText());
+                CamadaSimulacao.CalculaTempo(Long.valueOf(campoE.getText()), Long.valueOf(campoRTT.getText()), Long.valueOf(campoE.getText()));
             }
         }
     }
