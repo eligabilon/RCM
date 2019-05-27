@@ -132,9 +132,12 @@ public class InicioClient {
                     int numSeq = ByteBuffer.wrap(Arrays.copyOfRange(recebeDados, 0, CABECALHO)).getInt();
                     log.logCliente("Servidor: Numero de sequencia recebido " + (!CLICK? (numSeq>0?ackAleatorio=gerador.nextInt(numSeq):0) : numSeq));
 
-                    if (tempoCalculado <= CamadaSimulacao.listaTempo.get(0)) {
+                    log.logCliente(Long.valueOf(tempoCalculado).toString() + " ****");
+                    if (CamadaSimulacao.listaTempo.isEmpty()){
                         descartaPacote = false;
-                    }else{
+                    } else if (tempoCalculado <= CamadaSimulacao.listaTempo.get(0)) {
+                        descartaPacote = false;
+                    } else {
                         descartaPacote = true;
                     }
                     //se o pacote for recebido em ordem
@@ -241,7 +244,7 @@ public class InicioClient {
         public void actionPerformed(ActionEvent e) {
             if(caminhoPadrao.isSelected()){
                 File file = new File("");
-                textLocalMusica.setText(file.getAbsolutePath());
+                textLocalMusica.setText(file.getAbsolutePath()+"\\");
             }else{
                 textLocalMusica.setText("");
             }

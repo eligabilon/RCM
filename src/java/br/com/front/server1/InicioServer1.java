@@ -264,6 +264,7 @@ public class InicioServer1 {
                             }
                             semaforo.release();
                         }
+                        imprimeStatus(textAreaResult.getText());
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
