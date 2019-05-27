@@ -1,5 +1,6 @@
 package br.com.front.server1;
 
+import br.com.backEnd.CamadaSimulacao;
 import br.com.backEnd.Log;
 import br.com.entity.Attributes;
 
@@ -39,6 +40,9 @@ public class InicioServer1 {
     private JButton btnLimpar;
     private JButton btnBaixar;
     private JCheckBox localhostCheckBox;
+    private JTextField campoF;
+    private JTextField campoRTT;
+    private JTextField campoE;
     private Attributes attributes = new Attributes();
     
     Log log = new Log();
@@ -293,6 +297,7 @@ public class InicioServer1 {
                 log.logServidor(textIP.getText() + "\n" + attributes.getDiretorioMusic()+"\\"+textLocalMusica.getText());
                 log.logServidor("AGUARDE...");
                 InicioServer1 server = new InicioServer1(PORTA_SERVIDOR, PORTA_ACK, attributes.getDiretorioMusic()+"\\"+textLocalMusica.getText(), textIP.getText());
+                CamadaSimulacao simulacao = new CamadaSimulacao(campoF.getText(), campoRTT.getText(), campoE.getText());
             }
         }
     }
