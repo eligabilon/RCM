@@ -28,6 +28,7 @@ import java.util.List;
 import java.util.Random;
 import java.util.concurrent.TimeUnit;
 
+import static java.lang.Thread.currentThread;
 import static java.lang.Thread.sleep;
 
 @SuppressWarnings("Duplicates")
@@ -141,8 +142,9 @@ public class InicioClient {
                         descartaPacote = true;
                     }
                     //se o pacote for recebido em ordem
-                    if ((numSeq == proxNumSeq) && (descartaPacote == false)) {
-                        //se for ultimo pacote (sem dados), enviar ack de encerramento
+                    //if ((numSeq == proxNumSeq) && (descartaPacote == false)) {
+                    if (numSeq == proxNumSeq){
+                    //se for ultimo pacote (sem dados), enviar ack de encerramento
                         if (recebePacote.getLength() == CABECALHO) {
                             byte[] pacoteAck = gerarPacote(-2);     //ack de encerramento
                             socketSaida.send(new DatagramPacket(pacoteAck, pacoteAck.length, enderecoIP, portaDestino));
@@ -163,7 +165,6 @@ public class InicioClient {
 
                         //se for o primeiro pacote da transferencia
                         if (numSeq == 0 && ultimoNumSeq == -1) {
-                            sleep(1000);
                             //cria arquivo
                             File arquivo = new File(caminho);
                             if (!arquivo.exists()) {
@@ -184,9 +185,9 @@ public class InicioClient {
                         byte[] pacoteAck = gerarPacote(ultimoNumSeq);
                         socketSaida.send(new DatagramPacket(pacoteAck, pacoteAck.length, enderecoIP, portaDestino));
                         log.logCliente("Servidor: Ack duplicado enviado " + ultimoNumSeq);
-                        if (descartaPacote == true){
+                       /* if (descartaPacote == true){
                             log.logCliente("Pacote descartado!!! ");
-                        }
+                        }*/
                     }
                 }
                 if (fos != null) {
@@ -221,7 +222,6 @@ public class InicioClient {
             // INSTANCIAÇÃO DO OBJETO FILE COM O ARQUIVO MP3
             File mp3File = new File(caminho);
             try {
-                //sleep(5000);
                 //toca musica
                 musica.tocar(mp3File);
                 // CHAMA O METODO QUE TOCA A MUSICA
