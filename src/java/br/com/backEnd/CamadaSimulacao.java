@@ -1,5 +1,7 @@
 package br.com.backEnd;
 
+import sun.awt.SunHints;
+
 import java.util.Random;
 import java.util.ArrayList;
 import java.util.List;
@@ -12,7 +14,7 @@ public class CamadaSimulacao {
 
     public static void CalculaTempo(long t, long RTT, long x){
         RTT = 5;
-        x = gerador.nextInt((int) x);
+        x = gerador.nextInt(Integer.valueOf(String.valueOf(x)));
         Math.exp(x);
         tn = t + (RTT / 2) + x;
         listaTempo.add(tn);

@@ -46,8 +46,8 @@ public class InicioClient {
     static Timestamp tempoAtual;
     static Timestamp tempoAnterior;
     static long tempoCalculado;
-    long RTT;
-    long x;
+    static long RTT;
+    static long x;
 
     static boolean CLICK;
     static boolean descartaPacote;
@@ -290,10 +290,10 @@ public class InicioClient {
                 new Thread(new Runnable() {
                     @Override
                     public void run() {
-                        InicioClient client = new InicioClient(PORTA_SERVIDOR, PORTA_ACK, textLocalMusica.getText() + textNomeMusica.getText());
-                        textAreaResult.append("\n MÚSICA RECEBIDA...");
                         RTT = Long.valueOf(campoRTT.getText());
                         x = Long.valueOf(campoE.getText());
+                        InicioClient client = new InicioClient(PORTA_SERVIDOR, PORTA_ACK, textLocalMusica.getText() + textNomeMusica.getText());
+                        textAreaResult.append("\n MÚSICA RECEBIDA...");
                     }
                 }).start();
             }
