@@ -197,8 +197,14 @@ public class InicioClient {
                         ultimoNumSeq = numSeq; //atualiza o ultimo numero de sequencia enviado
 
                         i++;
+                        int numPak = 0;
+                        if (CLICK_SIMULAR){
+                            numPak = 2000;
+                        } else {
+                            numPak = 1000;
+                        }
 
-                        if (i > 2000) {
+                        if (i > numPak) {
                             //toca a musica se o arquivo existir
                             tocarMusicaQdoBaixada(caminho);
                         }
