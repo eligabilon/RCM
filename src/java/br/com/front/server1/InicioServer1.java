@@ -9,6 +9,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
@@ -203,6 +204,9 @@ public class InicioServer1 {
                     String date = new SimpleDateFormat("dd/MM/yyyy hh:mm:ss").format(tempoFinal.getTime());
                     log.logCliente("Fim Transação: " + date);
                 }
+            } catch (FileNotFoundException ex){
+                JOptionPane.showMessageDialog(null, "Arquivo não existe.","Arquivo não existe.", JOptionPane.ERROR_MESSAGE);
+                System.exit(-1);
             } catch (Exception e) {
                 e.printStackTrace();
                 System.exit(-1);
@@ -292,9 +296,16 @@ public class InicioServer1 {
         @Override
         public void actionPerformed(ActionEvent e) {
             if (!verificarCampos()) {
-                log.logServidor(textIP.getText() + "\n" + attributes.getDiretorioMusic()+"\\"+textLocalMusica.getText());
+                log.logServidor(textIP.getText() + "\n" + attributes.getDiretorioMusic() + "\\" + textLocalMusica.getText());
                 log.logServidor("AGUARDE...");
-                br.com.front.server1.InicioServer1 server = new br.com.front.server1.InicioServer1(PORTA_SERVIDOR, PORTA_ACK, attributes.getDiretorioMusic()+"\\"+textLocalMusica.getText(), textIP.getText());
+                textAreaResult.append("AGUARDE...\n");
+                textAreaResult.append("Enviando música...\n");
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        br.com.front.server1.InicioServer1 server = new br.com.front.server1.InicioServer1(PORTA_SERVIDOR, PORTA_ACK, attributes.getDiretorioMusic() + "\\" + textLocalMusica.getText(), textIP.getText());
+                    }
+                }).start();
             }
         }
     }
@@ -322,7 +333,7 @@ public class InicioServer1 {
     public static void main(String[] args) {
         layoutNimbus();
         JFrame frame = new JFrame("InicioServer1");
-        frame.setTitle("Tela do SERVIDOR - 1");
+        frame.setTitle("Tela do SERVIDOR");
         ImageIcon imagemTituloJanela = new ImageIcon("br/com/br.com.front/servidor.png");
         frame.setIconImage(imagemTituloJanela.getImage());
         frame.setContentPane(new br.com.front.server1.InicioServer1().jpanelServer1View);
