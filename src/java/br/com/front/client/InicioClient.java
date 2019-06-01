@@ -49,7 +49,8 @@ public class InicioClient {
     }
 
     static boolean CLICK;
-    static boolean descartaPacote;
+    static boolean CLICK_SIMULAR;
+    static boolean descartaPacote = false;
 
     private JPanel jpanelClientView;
     private JTextField textLocalMusica;
@@ -64,6 +65,8 @@ public class InicioClient {
     private JButton btnBaixar;
     private JCheckBox caminhoPadrao;
     private JCheckBox nomePadrao;
+    private JRadioButton simularSim;
+    private JRadioButton simularNao;
     private static Attributes attributes = new Attributes();
     public static AudioClip music;
     private int saiFora = 0;
@@ -140,14 +143,17 @@ public class InicioClient {
                     log.logCliente("RTT: " + (total<1?total=0:total));
 
                     log.logCliente(Long.valueOf(tempoCalculado).toString() + " ****");
-                    int desc = 0;
-                    desc = gerador.nextInt(CamadaSimulacao.listaTempo.size());
-                    if (CamadaSimulacao.listaTempo.isEmpty()){
-                        descartaPacote = false;
-                    } else if (tempoCalculado < (CamadaSimulacao.listaTempo.get(desc))) {
-                        descartaPacote = false;
-                    } else {
-                        descartaPacote = true;
+
+                    if(CLICK_SIMULAR) {
+                        int desc = 0;
+                        desc = gerador.nextInt(CamadaSimulacao.listaTempo.size());
+                        if (CamadaSimulacao.listaTempo.isEmpty()) {
+                            descartaPacote = false;
+                        } else if (tempoCalculado < (CamadaSimulacao.listaTempo.get(desc))) {
+                            descartaPacote = false;
+                        } else {
+                            descartaPacote = true;
+                        }
                     }
 
                     //se o pacote for recebido em ordem
@@ -286,8 +292,13 @@ public class InicioClient {
         public void actionPerformed(ActionEvent e) {
             textLocalMusica.setText("");
             textNomeMusica.setText("");
+            campoE.setText("1");
+            campoRTT.setText("10");
+            campoF.setText("1");
             sequencialRadioButton.setSelected(false);
             aleatorioRadioButton.setSelected(false);
+            simularNao.setSelected(true);
+            simularSim.setSelected(false);
         }
     }
 
@@ -297,8 +308,11 @@ public class InicioClient {
         public void actionPerformed(ActionEvent e) {
             if (!verificarCampos()) {
                 CLICK = sequencialRadioButton.isSelected();
+                CLICK_SIMULAR = simularSim.isSelected();
                 textAreaResult.append(textLocalMusica.getText() + "\n" + textNomeMusica.getText()
-                        + "\n" + "Sequencial " + sequencialRadioButton.isSelected() + "\n" + "Aleatório " + aleatorioRadioButton.isSelected());
+                        + "\n" + "Sequencial " + sequencialRadioButton.isSelected() + "\n" + "Aleatório " + aleatorioRadioButton.isSelected()
+                        + "\n" + simularNao.isSelected()
+                        + "\n" + simularSim.isSelected());
 
                 textAreaResult.append(" \n RECEBENDO MÚSICA...");
 
