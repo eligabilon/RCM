@@ -4,6 +4,7 @@ import br.com.backEnd.Log;
 import br.com.entity.Attributes;
 
 import javax.swing.*;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
@@ -328,6 +329,9 @@ public class InicioServer1 {
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.pack();
         frame.setVisible(true);
+        frame.setLocation(((Toolkit.getDefaultToolkit().getScreenSize().width  / 1) - (frame.getWidth() / 1)),
+                ((Toolkit.getDefaultToolkit().getScreenSize().height / 1) - (frame.getHeight() / 1)));
+
     }
 
     //layout nimbus para melhorar a interface

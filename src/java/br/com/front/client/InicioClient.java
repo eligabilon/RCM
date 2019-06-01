@@ -1,5 +1,6 @@
 package br.com.front.client;
 
+import br.com.backEnd.CamadaSimulacao;
 import br.com.backEnd.JLayer;
 import br.com.backEnd.Log;
 import br.com.entity.Attributes;
@@ -36,6 +37,11 @@ public class InicioClient {
     long t_bandwidth_ini, t_bandwidth_fim, t_bandwidth;
     long file_bandwidth;
     long tam_arq = 0;
+    static Timestamp tempoAtual;
+    static Timestamp tempoAnterior;
+    static long tempoCalculado;
+    static long RTT;
+    static long x;
     int i;
 
     {
@@ -43,10 +49,14 @@ public class InicioClient {
     }
 
     static boolean CLICK;
+    static boolean descartaPacote;
 
     private JPanel jpanelClientView;
     private JTextField textLocalMusica;
     private JTextField textNomeMusica;
+    private JTextField campoF;
+    private JTextField campoE;
+    private JTextField campoRTT;
     private JRadioButton sequencialRadioButton;
     private JRadioButton aleatorioRadioButton;
     private JTextArea textAreaResult;
@@ -80,6 +90,10 @@ public class InicioClient {
         caminhoPadrao.setToolTipText("Setar caminho default");
         nomePadrao.addActionListener(new br.com.front.client.InicioClient.CheckboxNomeClicked());
         nomePadrao.setToolTipText("Setar nome default");
+
+        campoE.setText("1");
+        campoRTT.setText("10");
+        campoF.setText("1");
     }
 
     //construtor
@@ -103,6 +117,7 @@ public class InicioClient {
                 DatagramPacket recebePacote = new DatagramPacket(recebeDados, recebeDados.length);
 
                 FileOutputStream fos = null;
+                tempoAtual = new Timestamp(System.currentTimeMillis());
                 while (!transferenciaCompleta) {
 
                     socketEntrada.receive(recebePacote);
@@ -110,9 +125,25 @@ public class InicioClient {
                     InetAddress enderecoIP = recebePacote.getAddress();
 
                     total = fim - inicio;
+
+                    tempoAnterior = tempoAtual;
+                    tempoAtual = new Timestamp(System.currentTimeMillis());
+
+                    tempoCalculado = Long.valueOf(tempoAtual.getTime()) - Long.valueOf(tempoAnterior.getTime());
+                    CamadaSimulacao.CalculaTempo(tempoCalculado, RTT, x);
+
                     int numSeq = ByteBuffer.wrap(Arrays.copyOfRange(recebeDados, 0, CABECALHO)).getInt();
                     log.logCliente("Servidor: Numero de sequencia recebido " + (!CLICK? (numSeq>0?ackAleatorio=gerador.nextInt(numSeq):0) : numSeq));
                     log.logCliente("RTT: " + (total<1?total=0:total));
+
+                    log.logCliente(Long.valueOf(tempoCalculado).toString() + " ****");
+                    if (CamadaSimulacao.listaTempo.isEmpty()){
+                        descartaPacote = false;
+                    } else if (tempoCalculado <= CamadaSimulacao.listaTempo.get(0)) {
+                        descartaPacote = false;
+                    } else {
+                        descartaPacote = true;
+                    }
 
                     //se o pacote for recebido em ordem
                     if ((numSeq == proxNumSeq)) {
@@ -131,6 +162,9 @@ public class InicioClient {
                             byte[] pacoteAck = gerarPacote(proxNumSeq);
                             socketSaida.send(new DatagramPacket(pacoteAck, pacoteAck.length, enderecoIP, portaDestino));
                             log.logCliente("Servidor: Ack enviado " + (!CLICK ? (proxNumSeq>0?seqAleatorio=gerador.nextInt(proxNumSeq):0) : proxNumSeq));
+                            inicio = 0;
+                            fim = 0;
+                            inicio = System.currentTimeMillis();
                             tempo = new Timestamp(System.currentTimeMillis());
                             String date = new SimpleDateFormat("dd/MM/yyyy hh:mm:ss").format(tempo.getTime());
                             log.logCliente("Inicio Transação: " + date);
@@ -223,7 +257,7 @@ public class InicioClient {
         public void actionPerformed(ActionEvent e) {
             if(caminhoPadrao.isSelected()){
                 File file = new File("");
-                textLocalMusica.setText(file.getAbsolutePath());
+                textLocalMusica.setText(file.getAbsolutePath()+"\\");
             }else{
                 textLocalMusica.setText("");
             }
@@ -266,6 +300,8 @@ public class InicioClient {
                 new Thread(new Runnable() {
                     @Override
                     public void run() {
+                        RTT = Long.valueOf(campoRTT.getText());
+                        x = Long.valueOf(campoE.getText());
                         br.com.front.client.InicioClient client = new br.com.front.client.InicioClient(PORTA_SERVIDOR, PORTA_ACK, textLocalMusica.getText() + textNomeMusica.getText());
                         textAreaResult.append("\n MÚSICA RECEBIDA...");
                     }
