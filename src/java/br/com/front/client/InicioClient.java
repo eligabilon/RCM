@@ -36,6 +36,11 @@ public class InicioClient {
     long t_bandwidth_ini, t_bandwidth_fim, t_bandwidth;
     long file_bandwidth;
     long tam_arq = 0;
+    int i;
+
+    {
+        i = 0;
+    }
 
     static boolean CLICK;
 
@@ -98,9 +103,8 @@ public class InicioClient {
                 DatagramPacket recebePacote = new DatagramPacket(recebeDados, recebeDados.length);
 
                 FileOutputStream fos = null;
-
                 while (!transferenciaCompleta) {
-                    int i = 0;
+
                     socketEntrada.receive(recebePacote);
                     fim = System.currentTimeMillis();
                     InetAddress enderecoIP = recebePacote.getAddress();
@@ -127,9 +131,6 @@ public class InicioClient {
                             byte[] pacoteAck = gerarPacote(proxNumSeq);
                             socketSaida.send(new DatagramPacket(pacoteAck, pacoteAck.length, enderecoIP, portaDestino));
                             log.logCliente("Servidor: Ack enviado " + (!CLICK ? (proxNumSeq>0?seqAleatorio=gerador.nextInt(proxNumSeq):0) : proxNumSeq));
-                            inicio = 0;
-                            fim = 0;
-                            inicio = System.currentTimeMillis();
                             tempo = new Timestamp(System.currentTimeMillis());
                             String date = new SimpleDateFormat("dd/MM/yyyy hh:mm:ss").format(tempo.getTime());
                             log.logCliente("Inicio Transação: " + date);
@@ -147,10 +148,15 @@ public class InicioClient {
                         //escreve dados no arquivo
                         fos.write(recebeDados, CABECALHO, recebePacote.getLength() - CABECALHO);
 
+
                         ultimoNumSeq = numSeq; //atualiza o ultimo numero de sequencia enviado
 
-                        //toca a musica se o arquivo existir
-                        tocarMusicaQdoBaixada(caminho);
+                        i++;
+
+                        if (i > 1000) {
+                            //toca a musica se o arquivo existir
+                            tocarMusicaQdoBaixada(caminho);
+                        }
 
                     } else {    //se pacote estiver fora de ordem, mandar duplicado
                         byte[] pacoteAck = gerarPacote(ultimoNumSeq);

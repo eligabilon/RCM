@@ -40,7 +40,7 @@ public class InicioServer1 {
     private JButton btnBaixar;
     private JCheckBox localhostCheckBox;
     private Attributes attributes = new Attributes();
-    
+
     Log log = new Log();
 
     Timestamp inicio, tempoFinal;
@@ -189,7 +189,7 @@ public class InicioServer1 {
                             }
                             semaforo.release();
                         }
-                        sleep(5);
+                        sleep(20);
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
