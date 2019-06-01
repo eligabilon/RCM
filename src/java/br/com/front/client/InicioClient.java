@@ -123,6 +123,9 @@ public class InicioClient {
                     socketEntrada.receive(recebePacote);
                     fim = System.currentTimeMillis();
                     InetAddress enderecoIP = recebePacote.getAddress();
+                    log.logCliente("\n\nIP DO SERVIDOR ********************** ");
+                    log.logCliente("IP DO SERVIDOR QUE RECEBEU O PACOTE: " + recebePacote.getAddress());
+                    log.logCliente("IP DO SERVIDOR ********************** \n\n");
 
                     total = fim - inicio;
 
