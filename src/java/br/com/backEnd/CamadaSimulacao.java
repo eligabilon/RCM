@@ -13,7 +13,6 @@ public class CamadaSimulacao {
     public static List <Long> listaTempo = new ArrayList<Long>();
 
     public static void CalculaTempo(long t, long RTT, long x){
-        RTT = 5;
         x = gerador.nextInt(Integer.valueOf(String.valueOf(x)));
         Math.exp(x);
         tn = t + (RTT / 2) + x;

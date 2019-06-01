@@ -182,7 +182,7 @@ public class InicioServer1 {
 //                            log.logServidor("Cliente: Numero de sequencia enviado " + proxNumSeq);
                             inicio = new Timestamp(System.currentTimeMillis());
                             String date = new SimpleDateFormat("dd/MM/yyyy hh:mm:ss").format(inicio.getTime());
-                            log.logServidor("Inicio Transação: " + date);
+                            log.logServidor("Tempo atual: " + date);
 
                             //atualiza numero de sequencia se nao estiver no fim
                             if (!ultimoNumSeq) {

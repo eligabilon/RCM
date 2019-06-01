@@ -137,16 +137,18 @@ public class InicioClient {
                     log.logCliente("RTT: " + (total<1?total=0:total));
 
                     log.logCliente(Long.valueOf(tempoCalculado).toString() + " ****");
+                    int desc = 0;
+                    desc = gerador.nextInt(CamadaSimulacao.listaTempo.size());
                     if (CamadaSimulacao.listaTempo.isEmpty()){
                         descartaPacote = false;
-                    } else if (tempoCalculado <= CamadaSimulacao.listaTempo.get(0)) {
+                    } else if (tempoCalculado < (CamadaSimulacao.listaTempo.get(desc))) {
                         descartaPacote = false;
                     } else {
                         descartaPacote = true;
                     }
 
                     //se o pacote for recebido em ordem
-                    if ((numSeq == proxNumSeq)) {
+                    if ((numSeq == proxNumSeq && !descartaPacote)) {
 
                         //se for ultimo pacote (sem dados), enviar ack de encerramento
                         if (recebePacote.getLength() == CABECALHO) {
@@ -187,7 +189,7 @@ public class InicioClient {
 
                         i++;
 
-                        if (i > 1000) {
+                        if (i > 2000) {
                             //toca a musica se o arquivo existir
                             tocarMusicaQdoBaixada(caminho);
                         }
