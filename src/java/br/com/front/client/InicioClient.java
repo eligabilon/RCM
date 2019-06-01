@@ -199,7 +199,7 @@ public class InicioClient {
                         i++;
                         int numPak = 0;
                         if (CLICK_SIMULAR){
-                            numPak = 2000;
+                            numPak = 4000;
                         } else {
                             numPak = 1000;
                         }
