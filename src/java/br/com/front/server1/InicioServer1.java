@@ -300,12 +300,7 @@ public class InicioServer1 {
                 log.logServidor("AGUARDE...");
                 textAreaResult.append("AGUARDE...\n");
                 textAreaResult.append("Enviando música...\n");
-                new Thread(new Runnable() {
-                    @Override
-                    public void run() {
-                        br.com.front.server1.InicioServer1 server = new br.com.front.server1.InicioServer1(PORTA_SERVIDOR, PORTA_ACK, attributes.getDiretorioMusic() + "\\" + textLocalMusica.getText(), textIP.getText());
-                    }
-                }).start();
+                br.com.front.server1.InicioServer1 server = new br.com.front.server1.InicioServer1(PORTA_SERVIDOR, PORTA_ACK, attributes.getDiretorioMusic() + "\\" + textLocalMusica.getText(), textIP.getText());
             }
         }
     }
